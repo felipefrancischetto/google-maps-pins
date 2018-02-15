@@ -9,13 +9,32 @@ export default class Home extends Component {
   constructor(props){
     super(props)
     this.state = {
-      isGettingPosition: true
+      isGettingPosition: false,
     }
   }
 
   showMap(state) {
-    return this.state.isGettingPosition ?
-      <MapLoading/> : <Map/>
+    return this.state.isGettingPosition 
+    ? <MapLoading/>
+    : <Map
+        googleMapURL='https://maps.googleapis.com/maps/api/js?key=AIzaSyDBRs3DJKdXUGFcRnGAUgKT2nLTsnjcTZQ'
+        loadingElement={<div style={{height: '100%', width: '100%'}}/>}
+        containerElement={<div style={{height: '100%', width: '100%'}}/>} 
+        mapElement={<div style={{height: '400px', width: '100%'}}/>}
+      />
+  }
+
+  componentDidMount(){
+    this.setState({ isGettingPosition: true })
+    navigator.geolocation.getCurrentPosition( position => {
+      this.setState({
+        isGettingPosition: false,
+        position: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+      })
+    })
   }
 
   render() {
